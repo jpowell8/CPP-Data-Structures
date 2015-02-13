@@ -1,0 +1,155 @@
+#include "BST.h"
+
+
+BST::BST(void)
+{
+}
+
+
+BST::~BST(void)
+{
+}
+
+//Please note that the class that implements this interface must be made
+	//of objects which implement the NodeInterface
+
+	/*
+	 * Returns the root node for this tree
+	 *
+	 * @return the root node for this tree.
+	 */
+NodeInterface* BST::getRootNode()
+{
+return Root;
+}
+
+	/*
+	 * Attempts to add the given int to the BST tree
+	 *
+	 * @return true if added
+	 * @return false if unsuccessful (i.e. the int is already in tree)
+	 */
+bool loopadd(int data, Node* node)
+{
+	if (data == node->Data){ return false; }//found duplicate
+	if ((node->RightChild != NULL)&&(data > node->Data))
+	{ return loopadd(data, node->RightChild); }
+	if ((node->LeftChild != NULL) && (data < node->Data))
+	{ return loopadd(data, node->LeftChild); }
+
+	if ((node->RightChild == NULL) && (data > node->Data))
+	{Node* pointer = new Node(node, NULL, NULL, data); 
+	node->RightChild = pointer;
+	return true;
+	}
+
+	if ((node->LeftChild == NULL) && (data > node->Data))
+	{Node* pointer = new Node(node, NULL, NULL, data);
+	node->LeftChild = pointer;
+	return true;
+	}
+
+	return false;//it should never get this far
+}
+bool BST::add(int data){
+	if (Root == NULL)
+	{
+		Root = new Node(NULL, NULL, NULL, data);
+		return true;
+	}
+
+	if (data == Root->Data){ return false; }
+	if (data < Root->Data){ 
+		return loopadd(data, Root); }//look left
+	if (data > Root->Data){ return loopadd(data, Root); }//look right
+
+	return false;
+//	Root->Data
+}
+
+	/*
+	 * Attempts to remove the given int from the BST tree
+	 *
+	 * @return true if successfully removed
+	 * @return false if remove is unsuccessful(i.e. the int is not in the tree)
+	 */
+//bool repeatremover(int data, Node* node, Node* switcher)
+Node* BST::FindToRemove(Node* current, int data)//always call passing the Root Node
+{
+	//Node* current = Root;
+	if (current == NULL){ return NULL; }
+	
+	if (current->Data == data){ return current; }
+	if (current->Data > data&& current->LeftChild!=NULL)
+	{
+		return FindToRemove(current->LeftChild);
+	}//left branch
+	if (data > current->data&&current->RightChild!=NULL)
+	{
+		return FindToRemove(current->RightChild);
+	}//right branch
+	return current;
+}
+
+Node* BST::FindSubRight(Node* node)//Must call logic on left child first before calling this node. This Node is only for going right
+{
+	if (node->RightChild == Null){ return node; }
+	if (node->RightChild != NULL){ return FindSubRight(node->RightChild); }
+}
+
+bool BST::remove(int data){//Call Remove on Root until Root == NULL
+	Node* ToBeRemoved = FindToRemove(Root, data);
+	Node* ToTakePlace=NULL;
+	int storage = 0;
+
+	if (ToBeRemoved->LeftChild == NULL)
+	{
+		if (ToBeRemoved == Root&&ToBeRemoved->RightChild!=NULL)
+		{
+			Root = ToBeRemoved->RightChild;
+			delete ToBeRemoved;
+			return true;
+		}//Root Case
+		if (ToBeRemoved->RightChild == NULL){
+			delete ToBeRemoved;
+			return true;
+		}//Leaf Case
+
+		ToBeRemoved->Data = ToBeRemoved->RightChild->Data;
+		ToBeRemoved->LeftChild = ToBeRemoved->RightChild->LeftChild;
+		ToBeRemoved->RightChild = ToBeRemoved->RightChild->RightChild;
+		delete ToBeRemoved;
+		return true;
+		//Code HERE for a straight line
+	}
+
+	if (ToBeRemoved->LeftChild != NULL){ ToTakePlace = FindSubRight(ToBeRemoved->LeftChild); }//returns the bottom right node, now perform switch and then account for a left node on it
+	storage = ToBeRemoved->Data;
+	ToBeRemoved->Data = ToTakePlace->Data;
+	ToTakePlace->Data = storage;//switch complete
+	
+	if (ToTakePlace->LeftChild == NULL){
+		ToTakePlace->Parent->RightChild = NULL;
+		delete ToTakePlace;
+		return true;
+	}
+	else{
+		//storage = ToTakePlace->Data;
+		ToTakePlace->Data = ToTakePlace->LeftChild->Data;
+		delete ToTakePlace->LeftChild;
+		ToTakePlace->LeftChild = NULL;
+	}
+
+}
+	/*
+	 * Removes all nodes from the tree, resulting in an empty tree.
+	 */
+void BST::clear()
+{
+	while (Root != NULL)
+	{
+		int number = Root->Data;
+		remove(number);
+	}
+	return;
+}

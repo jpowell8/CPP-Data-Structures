@@ -1,0 +1,10 @@
+﻿Build started 10/25/2013 9:47:22 PM.
+     1>Project "F:\CS 235\Lab4\Lab4\Lab4\Lab4.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\Lab4.unsuccessfulbuild".
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(254,5): error MSB3374: The last access/last write time on file "Debug\Lab4.unsuccessfulbuild" cannot be set. Access to the path 'Debug\Lab4.unsuccessfulbuild' is denied.
+     1>Done Building Project "F:\CS 235\Lab4\Lab4\Lab4\Lab4.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.04
